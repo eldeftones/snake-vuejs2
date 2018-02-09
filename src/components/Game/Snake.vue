@@ -6,9 +6,7 @@
       <score :score="score"></score>
     </div>
     <keep-alive>
-      <component :class="{zoomIn: !gameRunning}"
-                 :is="currentView"
-                 @savePlayerName="savePlayerName"></component>
+      <component :class="{zoomIn: !gameRunning}" :is="currentView" @savePlayerName="savePlayerName"></component>
     </keep-alive>
   </div>
 </template>
@@ -38,20 +36,24 @@
     ],
     data () {
       return {
+          gameRunning: false, // Indicates if the game is currently running
+          currentView: 'player-name-screen',
           firstGame: true,
           playerName: localStorage['playerName'] || '',
-          currentView: 'player-name-screen', // Payer name form screen|| Restart Game screen
-          speed: 150, // Speed in ms
-          gameRunning: false, // Indicates if the game is currently running
           boardSize: 26, // Size of the board game
           currentDirection: 1, // Current direction (index of const DIRECTIONS) of the head of the snake
           snake: [], // The snake (coordinates)
-          food: '' // The food (coordinates) 
+          food: '', // The food (coordinates)
+          speed: 150 // Speed in ms
       }
     },
     computed: {
+      /**
+       * Creates, fills and return the matrix of the game every moment the snake or the food evolves
+       */
       boardMatrix () {
         // Create the matrix of the board game filled with 0 (0=nothing, 1=snake, 2=food)
+        // Method fill() doesnt work on IE11
         const boardMatrix = Array(this.boardSize).fill(0).map(() => Array(this.boardSize).fill(0))
         // Let's place the snake in the matrix
         for ( let coords of this.snake ){
@@ -63,7 +65,11 @@
         }
         return boardMatrix
       },
-      score () {        
+      /**
+       * Returns the score of the current game
+       */
+      score () {
+        // Original snake size is 2
         return this.snake.length-2
       }
     },

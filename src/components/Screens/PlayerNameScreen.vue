@@ -30,7 +30,7 @@
 	.playerNameForm {
 		width: 350px;
     height: 100px;
-    background: #4449;    
+    background: rgba(68,68,68,0.59);
     text-align: center;
     position: relative;
     top:-320px;
