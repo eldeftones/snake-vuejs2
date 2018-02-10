@@ -35,12 +35,13 @@
 <style>
   html {
     overflow: hidden;
+    //background: #236F73;;
   }
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
+    -moz-osx-font-smoothing: grayscale;    
     margin-top: 60px;
+    //background: #236F73;;
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="score"> 
-    Votre score : {{ score }} 
+    Votre score <span :class="animatedClass">{{ score }}</span>
   </div>
 </template>
 
@@ -9,7 +9,20 @@
     name: 'score',
     props: {
       score: Number
-    }  
+    },
+    data () {
+      return {
+        animatedClass: ''
+      }
+    },
+    watch: {
+      score () {
+        this.animatedClass = "animated bounceIn"        
+        setTimeout( () => {
+              this.animatedClass = ""
+          }, 1000)
+      }
+    }
   }
 </script>
 
@@ -17,9 +30,15 @@
 <style scoped>
   .score {    
     width: 200px;
-    height: 40px;
-    padding-top: 8px;
-    background: lightskyblue;
-    text-align: center;
-  }  
+    height: 40px;    
+    background: #93C8CA;
+    padding-left: 45px;
+  }
+  .score span {
+    margin-left: 5px;
+    font-size: 25px;
+    font-weight: bold;
+    position: relative;
+    top: 2px;
+  }
 </style>

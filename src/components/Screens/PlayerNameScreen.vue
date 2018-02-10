@@ -1,7 +1,7 @@
 <template>
   <div class="playerNameForm">
   	<label for="playerName">Write your name and press <span>ENTER</span></label>
-  	<input v-model="playerName" type="text" id="playerName" placeholder="Enter your name" @keydown.enter="savePlayerName" @keydown.space.stop />
+  	<input v-model="playerName" ref="playerName" maxlength="20" type="text" id="playerName" placeholder="Enter your name" @keydown.enter="savePlayerName" @keydown.space.stop />
   </div>
 </template>
 
@@ -12,6 +12,10 @@
     	return {
     		playerName: ''
     	}
+    },
+    mounted () {
+      // Gives focus on the playerName input text
+      this.$refs.playerName.focus()
     },
     methods: {
     	savePlayerName () {

@@ -1,6 +1,6 @@
 <template>
   <div v-if="playerName != ''" class="player"> 
-    Bienvenue {{ playerName }} !!
+    Bienvenue <span class="animated flash">{{ playerName }}</span>
   </div>
 </template>
 
@@ -20,6 +20,9 @@
     height: 40px;
     padding-top: 8px;
     background: cadetblue;
-    padding-left: 30px;
-  }  
+    padding-left: 25px;
+  }
+  .player span {
+    font-weight: bold;
+  }
 </style>

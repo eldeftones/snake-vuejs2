@@ -1,6 +1,6 @@
 <template>
   <div>    
-    <board :class="{gameStoped: !gameRunning}"
+    <board :class="{gameStoped: !gameRunning, showSpeedUp: showSpeedUpClass}"
            :boardMatrix="boardMatrix"
            :gameRunning="gameRunning"
            :headDirection="headDirection"
@@ -18,6 +18,7 @@
                  :is="currentView"
                  @savePlayerName="savePlayerName"></component>
     </keep-alive>
+    <div v-show="showSpeedUpClass" class="speedUp animated" :class="{bounceIn: showSpeedUpClass}">SPEEDING UP</div>
   </div>
 </template>
 
@@ -57,7 +58,8 @@
           food: '', // The food (coordinates)
           speed: 150, // Speed in ms
           optionNoWall: true,
-          speedChangeInterval: ''
+          speedChangeInterval: '',
+          showSpeedUpClass: false
       }
     },
     computed: {
@@ -294,14 +296,20 @@
           }
       },
       /**
-       * Accelerates the speed of the snake every 25 seconds
+       * Accelerates the speed of the snake every 15 seconds until speed=40 and show the UP SPEED message
        */
       changeSpeed (){
        this.speedChangeInterval = setInterval( () => { 
           if (this.speed >= 50){
+            // Show the SPEEDIN UP message
+            this.showSpeedUpClass = true
+            // Increases the speed
             this.speed -= 10
+            setTimeout( () => {
+              this.showSpeedUpClass = false
+          }, 500)
           }
-        }, 25000)
+        }, 15000)
       },
       /**
        * Stops the game
@@ -395,6 +403,19 @@
     display: flex;
   }
   .gameStoped {    
-    opacity: 0.85;
+    opacity: 0.95;
+  }
+  .showSpeedUp {
+    background: black!important;
+  }
+  .speedUp {
+    font-weight: bold;
+    font-size: 50px;
+    color: white;
+    width: 520px;
+    margin: auto;
+    text-align: center;
+    position: relative;
+    top: -380px;
   }
 </style>

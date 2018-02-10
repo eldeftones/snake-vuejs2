@@ -28,8 +28,9 @@
     width: 520px;
     height: 520px;
     margin: auto;
-    background: lightgrey;
-    border-radius: 5px;
+    background: #d5d5d5;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
   }
   .row {
   	display:flex;

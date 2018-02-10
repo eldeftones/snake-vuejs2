@@ -16,7 +16,8 @@
           return 'snake'
         }
         if (this.typeSquare === 2){
-          return 'food'
+          //return 'animated zoomIn food'
+          return 'animated bounceInDown food'
         }
         if (this.typeSquare === 3){
           if (this.headDirection === 0)
@@ -51,10 +52,10 @@
     margin: 0px;
   }
   .snake {
-    background: green; 
+    background: #1E913C;
   }
   .food {
-    background: black;
+    background: #212529;
     border-radius: 10px;
   }
   .toTheTop {
