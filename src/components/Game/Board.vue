@@ -1,7 +1,7 @@
 <template>
   <div id="snakeBoard" class="snakeBoard">
 	  	<div class="row" v-for="row in boardMatrix">
-	      <square v-for="val in row" :key="row.id" :typeSquare="val"></square>
+	      <square v-for="val in row" :key="row.id" :typeSquare="val" :headDirection="headDirection" :tailDirection="tailDirection"></square>
 	    </div>  
   </div>
 </template>
@@ -16,7 +16,9 @@
     },
     props: {
     	boardMatrix: Array,
-    	gameRunning: Boolean
+    	gameRunning: Boolean,
+      headDirection: Number,
+      tailDirection: Number
     }
   }
 </script>
@@ -27,6 +29,7 @@
     height: 520px;
     margin: auto;
     background: lightgrey;
+    border-radius: 5px;
   }
   .row {
   	display:flex;
