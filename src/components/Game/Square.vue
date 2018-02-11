@@ -62,7 +62,7 @@
     border-radius: 10px;
   }
   .bonus {
-    background: red;
+    background: #f94343;
     border-radius: 10px;
   }
   .toTheTop {
