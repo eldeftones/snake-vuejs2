@@ -6,7 +6,7 @@
   export default {
     name: 'square',
     props: {
-      typeSquare: Number, // 0 = Nothing / 1 = Snake / 2 = Food / 3 = Head / 4 = Tail
+      typeSquare: Number, // 0 = Nothing / 1 = Snake / 2 = Food / 3 = Head / 4 = Tail / 5 = Bonus
       headDirection: Number,
       tailDirection: Number
     },
@@ -39,6 +39,9 @@
           if (this.tailDirection === 3)
             return 'snake toTheRight'
         }
+        if (this.typeSquare === 5){
+          return 'bonus animated flash infinite'
+        }
       }
     }
   }
@@ -56,6 +59,10 @@
   }
   .food {
     background: #212529;
+    border-radius: 10px;
+  }
+  .bonus {
+    background: red;
     border-radius: 10px;
   }
   .toTheTop {

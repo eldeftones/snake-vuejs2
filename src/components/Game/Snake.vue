@@ -54,12 +54,14 @@
           playerName: localStorage['playerName'] || '', // Player name
           boardSize: 26, // Size of the board game
           currentDirection: 1, // Current direction (index of const DIRECTIONS) of the head of the snake
+          nextDirectionsBuffer: [], // Registers the next directions, necessary if the user plays fast
           snake: [], // The snake (coordinates)
           food: '', // The food (coordinates)
+          bonus: '', // The bonus (coordinates)
+          score: 0,
           speed: 150, // Speed in ms
-          optionNoWall: true,
-          speedChangeInterval: '',
-          showSpeedUpClass: false
+          optionNoWall: true, // Option allowing the snake (or no) to go throw walls
+          showSpeedUpClass: false // Indicates if we show (or no) the "changing speed" message
       }
     },
     computed: {
@@ -86,14 +88,11 @@
         if (this.food){
           boardMatrix[this.food[0]][this.food[1]] = 2
         }
+        // Let's place the bonus in the matrix if it exists
+        if (this.bonus){
+          boardMatrix[this.bonus[0]][this.bonus[1]] = 5
+        }
         return boardMatrix
-      },
-      /**
-       * Returns the score of the current game
-       */
-      score () {
-        // Original snake size is 2
-        return this.snake.length-2
       },
       /**
        * Indicates in which direction the the head has to be "steered"
@@ -148,7 +147,15 @@
         // If the game is over, we stop the cycle
         if (!this.gameRunning) { return }
 
-        // Get the coordonates of the head of the snake
+        //  If there is new directions in the buffer...
+        if (this.nextDirectionsBuffer.length > 0){
+          // Get the next direction...
+          this.currentDirection = this.nextDirectionsBuffer[0]
+          // ... and remove it from the buffer
+          this.nextDirectionsBuffer.shift()
+        }
+
+        // Get the coordinates of the head of the snake
         const actualHead = this.snake[this.snake.length - 1]
         // Let's create the new head according to the current direction
         let newHead = [
@@ -170,10 +177,16 @@
           this.snake.push(newHead)
           // If the new head is at the same place that food...
           if (this.isFood(newHead)){
-            // We replace food by snake
-            this.boardMatrix[newHead[0]][newHead[1]] = 1
+            // We increase the score
+            this.score++            
             // We generation a new food in the board
-            this.generateFood()                 
+            this.food = this.generateElem()                 
+          }
+          else if (this.isBonus(newHead)){
+            // We increase the score
+            this.score = this.score + 10
+            // Delete the bonus
+            this.bonus = ''           
           }
           // Else we remove the tail of the snake so it remains at the same length
           else {           
@@ -236,24 +249,42 @@
       /**
        * Randomly creates food for the snake
        */
-      generateFood () {
-        const newFood = [
+      generateElem () {
+        const newElem = [
           Math.floor((Math.random() * this.boardSize) + 1),
           Math.floor((Math.random() * this.boardSize) + 1)
         ]
-        if (this.isOnBoardGame(newFood) && !this.isPartOfTheSnake(newFood)){
-          this.food = newFood
+        if (this.isOnBoardGame(newElem) && !this.isPartOfTheSnake(newElem)){
+         return newElem
         } else {
-          this.generateFood()
+          return this.generateElem()
         }
+      },
+      /**
+       * Randomly generates bonus
+       */
+      generateBonus() {
+          // If the game is over, we stop the cycle
+          if (!this.gameRunning) { return }
+          
+          // If the bonus has not been eaten, we remove it
+          this.bonus = ''
+          // Generates a new element
+          this.bonus = this.generateElem()
+          // Generates a new bonus in a random time
+          let randomTime = 15000 + Math.floor((Math.random() * 5000) + 1)
+
+          setTimeout(() => {            
+            this.generateBonus()
+        }, randomTime);
       },
       /**
        * Checks if the new direction elected by the user is on the opposite side with the current direction
        * @param {number} Corresponds to the id of the DIRECTIONS vector
        * @returns {boolean} true if directions are opposite, false otherwise
-       */
-      isOppositeDirection (newDirection) {
-          return (this.currentDirection + newDirection) % 2 === 0
+       */      
+      isOppositeDirection (direction1, direction2) {
+          return (direction1 + direction2) % 2 === 0
       },
       /**
        * Checks if the element if a part of the snake
@@ -270,6 +301,9 @@
        */
       isFood (elem){
         return this.boardMatrix[elem[0]][elem[1]] === 2
+      },
+      isBonus (elem){
+        return this.boardMatrix[elem[0]][elem[1]] === 5
       },
       /**
        * Checks if an element is within the board game
@@ -290,9 +324,16 @@
        * Changes the current direction
        * @param {number} Corresponds to the id of the DIRECTIONS vector
        */
-      changeDirection (newDirection) {
-        if (!this.isOppositeDirection(newDirection) && this.currentDirection != newDirection){
-              this.currentDirection = newDirection
+      changeDirection (newDirection) {   
+          if (this.nextDirectionsBuffer.length === 0) {
+             if (!this.isOppositeDirection(this.currentDirection, newDirection) && this.currentDirection != newDirection){              
+                this.nextDirectionsBuffer.push(newDirection)
+              }
+          }
+          else {
+            if (!this.isOppositeDirection(newDirection, this.nextDirectionsBuffer[this.nextDirectionsBuffer.length-1])){              
+              this.nextDirectionsBuffer.push(newDirection)
+            }            
           }
       },
       /**
@@ -320,7 +361,7 @@
         // Delete the food
         this.food = ''
         // Delete the snake
-        this.snake = []
+        this.snake = []        
         // Stop the changeSpeed Interval
         clearInterval(this.speedChangeInterval)
       },
@@ -344,15 +385,21 @@
         // Define the starting direction (to the right)
         this.currentDirection = 1 
         // Creates and show the snake
-        this.snake = [[5,5],[5,6]]     
+        this.snake = [[5,5],[5,6]]
+        // Empty the buffer
+        this.nextDirectionsBuffer = []
         // Creates food on the board game
-        this.generateFood()
+        this.food = this.generateElem()        
         // Starts the game
         this.gameRunning = true
         // Put the snake in motion
         this.moveSnake()
         // Starts the changing speed time interval
         this.changeSpeed()
+        // Start creating bonus on the board game after 10 sec
+        setTimeout(() => {            
+            this.generateBonus()
+        }, 10000);
       }
     },
     watch: {
@@ -372,21 +419,22 @@
              }
             }
          }
-         // Left arrow
-         if (keyPressed == 37){
-            this.changeDirection(3)
-         }
+
          // Up arrow
-         if (keyPressed == 38){
+         if (keyPressed === 38 || keyPressed === 87){
             this.changeDirection(0)
          }
          // Right arrow
-         if (keyPressed == 39){
+         if (keyPressed === 39 || keyPressed === 68){
             this.changeDirection(1)
          }
          // Down arrow
-         if (keyPressed == 40){
+         if (keyPressed === 40 || keyPressed === 83){
             this.changeDirection(2)
+         }
+         // Left arrow
+         if (keyPressed === 37 || keyPressed === 65){
+            this.changeDirection(3)
          }
       }
     }
