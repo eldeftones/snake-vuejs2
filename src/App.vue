@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <snake :action="keyCode"></snake>
+
+     <div class="freeIcons">Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
   </div>
 </template>
 
@@ -43,5 +45,11 @@
     -moz-osx-font-smoothing: grayscale;    
     margin-top: 60px;
     //background: #236F73;;
+  }
+  .freeIcons {
+    font-size: 12px;
+    text-align: right;
+    position: absolute;
+    bottom: 0;
   }
 </style>

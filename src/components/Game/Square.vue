@@ -1,46 +1,54 @@
 <template>
-  <span class="square" :class="typeSquareClass"></span>
+  <span class="square" :class="typeSquareClass">
+    <img v-if="typeSquare === 2" src="../../assets/apple24.png" class="foodImg">
+    <img v-if="typeSquare === 5" src="../../assets/strawberry24.png" class="foodImg">
+    <img v-if="typeSquare === 6" src="../../assets/chili24.png" class="foodImg">
+    <img v-if="typeSquare === 7" src="../../assets/grapes24.png" class="foodImg">
+    <img v-if="typeSquare === 8" src="../../assets/trump24.png" class="foodImg">
+    <img v-if="typeSquare === 9" src="../../assets/brickwall20.png" class="foodImg">
+  </span>
 </template>
 
 <script>
   export default {
     name: 'square',
     props: {
-      typeSquare: Number, // 0 = Nothing / 1 = Snake / 2 = Food / 3 = Head / 4 = Tail / 5 = Bonus
+      typeSquare: Number, // 0 = Nothing / 1 = Snake / 2 = Food / 3 = Head / 4 = Tail / 5-6 = Bonus
       headDirection: Number,
-      tailDirection: Number
+      tailDirection: Number,
+      colorSnake: String
     },
     computed: {
       typeSquareClass () {
         if (this.typeSquare === 1){
-          return 'snake'
+          return this.colorSnake
         }
-        if (this.typeSquare === 2){
+        else if (this.typeSquare === 2){
           //return 'animated zoomIn food'
           return 'animated bounceInDown food'
         }
-        if (this.typeSquare === 3){
+        else if (this.typeSquare === 3){
           if (this.headDirection === 0)
-            return 'snake toTheTop'
-          if (this.headDirection === 1)
-            return 'snake toTheRight'
+            return this.colorSnake + ' toTheTop'
+          if (this.headDirection === 1)  
+            return this.colorSnake + ' toTheRight'
           if (this.headDirection === 2)
-            return 'snake toTheBottom'
+            return this.colorSnake + ' toTheBottom'
           if (this.headDirection === 3)
-            return 'snake toTheLeft'
+            return this.colorSnake + ' toTheLeft'
         }
-        if (this.typeSquare === 4){
+        else if (this.typeSquare === 4){
           if (this.tailDirection === 0)
-            return 'snake toTheBottom'
+            return this.colorSnake + ' toTheBottom'
           if (this.tailDirection === 1)
-            return 'snake toTheLeft'
+            return this.colorSnake + ' toTheLeft'
           if (this.tailDirection === 2)
-            return 'snake toTheTop'
+            return this.colorSnake + ' toTheTop'
           if (this.tailDirection === 3)
-            return 'snake toTheRight'
+            return this.colorSnake + ' toTheRight'
         }
-        if (this.typeSquare === 5){
-          return 'bonus animated flash infinite'
+        else if (this.typeSquare >= 5 && this.typeSquare != 9){
+          return 'animated flash infinite'
         }
       }
     }
@@ -54,16 +62,17 @@
     padding: 0px;
     margin: 0px;
   }
-  .snake {
+  .green {
     background: #1E913C;
   }
-  .food {
-    background: #212529;
-    border-radius: 10px;
+  .red {
+    background: #D73E3A;
   }
-  .bonus {
-    background: #f94343;
-    border-radius: 10px;
+  .purple {
+    background: #9777A8;
+  }
+  .foodImg {
+    margin-top:-10px;
   }
   .toTheTop {
     border-top-left-radius: 40px;
