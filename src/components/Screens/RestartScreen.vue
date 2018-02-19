@@ -15,7 +15,7 @@
     .restartGame {
       width: 230px;
       height: 80px;
-      background: #4449;    
+      background: #848484;
       text-align: center;
       position: relative;
       top:-320px;

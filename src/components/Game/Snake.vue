@@ -530,13 +530,17 @@
        */
       startGame () {
         // Indicates that the next games are not the first one
-        this.firstGame = false 
+        this.firstGame = false
+        // Set/Reset the score
+        this.score = 0
         // Define the starting speed
         this.speed = 150
         // Define the starting direction (to the right)
         this.currentDirection = 1 
+        // Define the starting color of snake
+        this.colorSnake = "green"
         // Creates and show the snake
-        this.snake = [[5,5],[5,6],[5,7],[5,8]]
+        this.snake = [[5,5],[5,6]]
         // Empty the buffer
         this.nextDirectionsBuffer = []
         // Creates food on the board game
