@@ -530,7 +530,9 @@
        */
       startGame () {
         // Indicates that the next games are not the first one
-        this.firstGame = false 
+        this.firstGame = false
+        // Set/Reset the score
+        this.score = 0
         // Define the starting speed
         this.speed = 150
         // Define the starting direction (to the right)
