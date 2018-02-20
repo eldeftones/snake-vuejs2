@@ -1,4 +1,4 @@
-<template> 
+<template>
     <div class="animated startGame">
         Ready to play ?<br/>
         Press <span>SPACE</span>
