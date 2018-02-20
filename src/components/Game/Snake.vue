@@ -11,7 +11,7 @@
         <player :playerName="playerName"></player>
         <score :score="score"></score>
        </div>
-      
+
     </div>
     <options :optionNoWall="optionNoWall" @switchWallOption="switchWallOption"></options>
 
@@ -76,13 +76,13 @@
         // Create the matrix of the board game filled with 0 (0=nothing, 1=snake, 2=food)
         // Method fill() doesnt work on IE11 (Polyfill added in main.js to correct that)
         const boardMatrix = Array(this.boardSize).fill(0).map(() => Array(this.boardSize).fill(0))
-        // Let's place the snake in the matrix      
+        // Let's place the snake in the matrix
         for (var i=0; i<this.snake.length; i++) {
           // Tail ot the snake
           if (i === 0){
             boardMatrix[this.snake[i][0]][this.snake[i][1]] = 4
           }
-          // Head of the snake 
+          // Head of the snake
           else if ( i === this.snake.length-1){
             boardMatrix[this.snake[i][0]][this.snake[i][1]] = 3
           }
@@ -90,7 +90,7 @@
           else {
             boardMatrix[this.snake[i][0]][this.snake[i][1]] = 1
           }
-        }        
+        }
         // Let's place the food in the matrix if it exists
         if (this.food){
           boardMatrix[this.food[0]][this.food[1]] = 2
@@ -143,12 +143,12 @@
       savePlayerName (name) {
         this.playerName = name
         localStorage['playerName'] = this.playerName
-        this.currentView = 'start-game-screen'        
+        this.currentView = 'start-game-screen'
       },
       /**
        * Enable/Disable the "going throw walls" option
        */
-      switchWallOption () { 
+      switchWallOption () {
         this.optionNoWall = !this.optionNoWall
         if (this.gameRunning){
           this.gameOver()
@@ -156,7 +156,7 @@
       },
       /**
        * Makes the snake move.
-       * Recursive function : each call makes the snake move of one square 
+       * Recursive function : each call makes the snake move of one square
        */
       moveSnake () {
         // If the game is over, we stop the cycle
@@ -186,16 +186,16 @@
           // OPTION : Going throw walls
           if (this.optionNoWall && !this.isOnBoardGame(newHead)){
               // We place the head on the opposite side of the board
-              newHead = this.placeTheHeadToOppositeSide(newHead)              
+              newHead = this.placeTheHeadToOppositeSide(newHead)
           }
           // Add the new head at the snake
           this.snake.push(newHead)
           // If the new head is at the same place that food...
           if (this.isFood(newHead)){
             // We increase the score
-            this.score++            
+            this.score++
             // We generation a new food in the board
-            this.food = this.generateElem()                 
+            this.food = this.generateElem()
           }
           // If the new head is at the same place that a bonus..
           else if (this.isBonus(newHead)){
@@ -207,13 +207,13 @@
             this.activateBonusEffect(this.typeBonus)
           }
           // Else we remove the tail of the snake so it remains at the same length
-          else {           
+          else {
             this.snake.shift()
-          }          
+          }
         }
 
         // Recursive call to move the snake again at the current speed
-        setTimeout(() => {            
+        setTimeout(() => {
             this.moveSnake()
         }, this.speed);
       },
@@ -237,7 +237,7 @@
           // We put the max speed
           this.speed = 40
           // In 10 sec we put back the normal speed, normal color and starts the generation bonus cycle
-          this.currentGameTimeouts.push( setTimeout(() => {           
+          this.currentGameTimeouts.push( setTimeout(() => {
             this.speed = oldSpeed
             this.colorSnake = "green"
             this.generateBonus()
@@ -248,7 +248,7 @@
           this.invertDirections = true
           this.colorSnake = "purple"
           // Put normal directions after 10sec and starts again the generation bonus cycle
-          this.currentGameTimeouts.push( setTimeout(() => {           
+          this.currentGameTimeouts.push( setTimeout(() => {
             this.invertDirections = false
             this.colorSnake = "green"
             this.generateBonus()
@@ -268,11 +268,11 @@
           // Get an empty cell on the board game
           this.elem = this.generateElem()
           // Add the brick to the wall
-          this.wall.push([this.elem])         
+          this.wall.push([this.elem])
           // Randomly decides if we build in which direction we build the wall
           this.randomDirection = Math.floor(Math.random() * 4)
           // Add ramdomly between 5 and 10 bricks
-          for (let i = 0; i < Math.floor(Math.random()*6+5); i++){      
+          for (let i = 0; i < Math.floor(Math.random()*6+5); i++){
               this.elem = this.generateElemOnEmptyNeighbourCell(this.elem, this.randomDirection)
               if (this.elem != ""){
                 this.wall[this.wall.length-1].push(this.elem)
@@ -286,7 +286,7 @@
       /**
        *
        */
-      generateElemOnEmptyNeighbourCell (elem,direction) {          
+      generateElemOnEmptyNeighbourCell (elem,direction) {
           // Creates an element on the random direction
           let newElem = [
             elem[0] + DIRECTIONS[direction][0],
@@ -299,7 +299,7 @@
           }
           return ""
       },
-      
+
       /**
        * Returns the score according to the bonus
        */
@@ -378,14 +378,14 @@
       generateBonus () {
         // We remove the bonus (if not already eatean)
         this.bonus = ''
-        
+
         // Wait 5sec before generating a new bonus
         this.bonusGenerationTimeOut = setTimeout(() => {
           // Generates a new element
           this.bonus = this.generateElem()
           // Ramdomly decides which bonus it will be
           this.typeBonus = Math.floor((Math.random() * 4) + 5)
-          // The bonus will stay 5sec maximum          
+          // The bonus will stay 5sec maximum
           this.bonusGenerationTimeOut = setTimeout(() => {
             this.generateBonus()
           }, 5000)
@@ -395,7 +395,7 @@
        * Checks if the new direction elected by the user is on the opposite side with the current direction
        * @param {number} Corresponds to the id of the DIRECTIONS vector
        * @returns {boolean} true if directions are opposite, false otherwise
-       */      
+       */
       isOppositeDirection (direction1, direction2) {
         return (direction1 + direction2) % 2 === 0
       },
@@ -413,7 +413,7 @@
        * @returns {boolean} true if part of the snake, false otherwise
        */
       isPartOfTheSnake (elem) {
-        return this.boardMatrix[elem[0]][elem[1]] === 1 
+        return this.boardMatrix[elem[0]][elem[1]] === 1
                 || this.boardMatrix[elem[0]][elem[1]] === 3
                 || this.boardMatrix[elem[0]][elem[1]] === 4
       },
@@ -423,7 +423,7 @@
        * @returns {boolean} true if part of the wall, false otherwise
        */
       isPartOfTrumpWall (elem) {
-        return this.boardMatrix[elem[0]][elem[1]] === 9 
+        return this.boardMatrix[elem[0]][elem[1]] === 9
       },
       /**
        * Checks if the element if food
@@ -434,7 +434,7 @@
         return this.boardMatrix[elem[0]][elem[1]] === 2
       },
       isBonus (elem){
-        return this.boardMatrix[elem[0]][elem[1]] === 5 
+        return this.boardMatrix[elem[0]][elem[1]] === 5
                 || this.boardMatrix[elem[0]][elem[1]] === 6
                 || this.boardMatrix[elem[0]][elem[1]] === 7
                 || this.boardMatrix[elem[0]][elem[1]] === 8
@@ -467,21 +467,21 @@
             newDirection = this.invertDirection(newDirection)
           }
           if (this.nextDirectionsBuffer.length === 0) {
-             if (!this.isOppositeDirection(this.currentDirection, newDirection) && this.currentDirection != newDirection){              
+             if (!this.isOppositeDirection(this.currentDirection, newDirection) && this.currentDirection != newDirection){
                 this.nextDirectionsBuffer.push(newDirection)
               }
           }
           else {
-            if (!this.isOppositeDirection(newDirection, this.nextDirectionsBuffer[this.nextDirectionsBuffer.length-1])){              
+            if (!this.isOppositeDirection(newDirection, this.nextDirectionsBuffer[this.nextDirectionsBuffer.length-1])){
               this.nextDirectionsBuffer.push(newDirection)
-            }            
+            }
           }
       },
       /**
        * Accelerates the speed of the snake every 15 seconds until speed=40 and show the UP SPEED message
        */
       changeSpeed (){
-       this.speedChangeInterval = setInterval( () => { 
+       this.speedChangeInterval = setInterval( () => {
           if (this.speed >= 50){
             // Show the SPEEDIN UP message
             this.showSpeedUpClass = true
@@ -507,6 +507,8 @@
         this.snake = []
         // Delete the trump walls
         this.wall = []
+        // In case we lose while we are drunk, we put the right directions
+        this.invertDirections = false
         // Stop the changeSpeed Interval
         clearInterval(this.speedChangeInterval)
         // Stop the bonus generation
@@ -536,7 +538,7 @@
         // Define the starting speed
         this.speed = 150
         // Define the starting direction (to the right)
-        this.currentDirection = 1 
+        this.currentDirection = 1
         // Define the starting color of snake
         this.colorSnake = "green"
         // Creates and show the snake
@@ -544,7 +546,7 @@
         // Empty the buffer
         this.nextDirectionsBuffer = []
         // Creates food on the board game
-        this.food = this.generateElem()  
+        this.food = this.generateElem()
         // Starts the game
         this.gameRunning = true
         // Put the snake in motion
@@ -561,7 +563,7 @@
       action (keyPressed) {
          // Space - Start || Restart the game
          if (keyPressed == 32){
-           // Start the game    
+           // Start the game
            if (this.playerName != '' && this.firstGame){
              this.currentView = ''
              this.startGame()
@@ -599,12 +601,12 @@
 <style scoped>
   .gameControl {
     width: 520px;
-    margin: auto;    
+    margin: auto;
   }
   .flex {
     display: flex;
   }
-  .gameStoped {    
+  .gameStoped {
     opacity: 0.95;
   }
   .showSpeedUp {
